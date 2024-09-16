@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+    <style>
+        .color-legend {
+            display: flex;
+            align-items: center;
+        }
+
+        .color-box {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+        .buttonload {
+            border: solid; 
+            border-width: 1px;
+            padding: 12px 24px; /* Some padding */
+            font-size: 16px; /* Set a font-size */
+            width: 150px;
+            height: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <div id="main-wrapper">
+        <%- include('./partials/header_logo'); -%>
+            <%- include('./partials/header',{titel: "Sales Order"}); -%>
+                <%- include('./partials/sidebar_sa'); -%>
+                    <div class="content-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h4 class="card-title"></h4>
+                                            <button type="button" class="btn btn-rounded btn-outline-info" onclick="window.location.href='/sales_sa/'">
+                                                <i class="la la-undo"></i> <%= language.go_back %>
+                                            </button>
+                                            
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-validation">
+
+                                                <form class="needs-validation" action="/sales_sa/add_sales"
+                                                    method="post" id="form">
+
+                                                    <div class="row mb-3">
+                                                        <div class="col-xl-4 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no">Document Number<span class="text-red">*</span></label>
+                                                                <span><h3><%= sales_sa.invoice %></h3></span>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-xl-4 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.customer %>  <span class="text-red">*</span></label>
+                                                                <span><h3><%= sales_sa.customer %></h3></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-4 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.date %> <span class="text-red">*</span></label>
+                                                                <span><h3><%= sales_sa.date %></h3></span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xl-4 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no">Sales Order Number<span class="text-red">*</span></label>
+                                                                <span><h3><%= sales_sa.JD %></h3></span>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-xl-4 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no">PO Number<span class="text-red">*</span></label>
+                                                                <span><h3><%= sales_sa.po_number %></h3></span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xl-4 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no">Desired Delivery Date<span class="text-red">*</span></label>
+                                                                <span><h3><%= sales_sa.desired_delivery %></h3></span>
+                                                            </div>
+                                                        </div>
+                                                            
+                                                    </div>
+                                                    <div class="col-xl-12">
+                                                        <div class="table-responsive">
+                                                            <table class="table primary-table-bordered" id="sales_tbl_new">
+                                                                <thead class="thead-primary">
+                                                                    <tr>
+                                                                        <th scope="col">Item Code </th>
+                                                                        <th scope="col">Item Description </th>
+                                                                        <!-- <th scope="col"><%= language.in_stock %> </th> -->
+                                                                        <th scope="col"><%= language.quantity %> <span class="text-red">*</span></th>
+                                                                        <th scope="col">UOM </th>
+                                                                        <th scope="col">Invoice Price </th>
+                                                                        <th scope="col">All. Discount</th>
+                                                                        <th scope="col">Dist. Adj</th>
+                                                                        <th scope="col">Net Sales Value</th>
+                                                                        <!-- <th scope="col">Total Price </th> -->
+                                                                    </tr>
+                                                                </thead>
+                                                                <% var total = 0; %>
+                                                                <% var totalqty = 0; %>
+                                                                <% var totalprices = 0; %>
+                                                                <% var totaldiscprice = 0; %>
+                                                                <% var totalacctdisc = 0; %>
+                                                                <% var totaladjdisc = 0; %>
+                                                                <%
+                                                                    const nFormat = new Intl.NumberFormat();
+                                                                %>
+                                                                <tbody id="tblPage_NewOut">
+                                                                    <% sales_sa.sale_product.map((data) => { %>
+                                                                        <tr>
+                                                                            <td><%= data.product_code %></td>
+                                                                            <td><%= data.product_name %></td>
+                                                                            <!-- <td><%= data.primary_code %></td>
+                                                                            <td><%= data.batch_code %></td>
+                                                                            <td><%= data.production_date %></td>
+                                                                            <td><%= data.expiry_date %></td> -->
+                                                                            <!-- <td><%= nFormat.format(data.stock) %></td> -->
+                                                                            <td><%= nFormat.format(data.quantity) %></td>
+                                                                            <td><%= data.unit %></td>
+                                                                            <td><%= nFormat.format(data.price) %></td>
+                                                                            <td><%= nFormat.format(data.discount) %></td>
+                                                                            <td><%= nFormat.format(data.adjustment_discount) %></td>
+                                                                            <!-- <td><%= nFormat.format(data.accounting_discount) %></td> -->
+                                                                            <td><%= nFormat.format(data.totalprice)  %></td>
+                                                                            <% total += parseFloat(data.totalprice)  %>
+                                                                            <% totalqty += parseInt(data.quantity)  %>
+                                                                            <% totalprices += parseInt(data.price)  %>
+                                                                            <% totaldiscprice += parseInt(data.discount)  %>
+                                                                            <% totalacctdisc += parseFloat(data.accounting_discount) %>
+                                                                            <% totaladjdisc += parseFloat(data.adjustment_discount) %>
+                                                                            
+                                                                        </tr>
+                                                                    <% }) %>
+
+
+                                                                    <tr>
+                                                                        <td colspan="1"></td>
+                                                                        <td class="text-center"><b>TOTAL: </b></td>
+                                                                        <td><b><%= nFormat.format(totalqty) %></b></td>
+                                                                        <td></td>
+                                                                        <td><b><%= nFormat.format(totalprices) %></b></td>
+                                                                        <td><b><%= (totaldiscprice != null && !isNaN(totaldiscprice)) ? nFormat.format(totaldiscprice) : 0 %></b></td>
+                                                                        <td><b><%= totaladjdisc %></b></td>
+                                                                        <!-- <td><b><%= totalacctdisc %></b></td> -->
+                                                                        
+                                                                        <td><b><%= nFormat.format(total) %></b></td>
+                                                                    </tr>
+                                                                    
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-sm-3">
+                                                            <table class="table primary-table-bordered">
+                                                                <thead class="thead-primary text-center">
+                                                                    <tr>
+                                                                        <td></td>
+                                                                        <td>Name</td>
+                                                                        <td>Status</td>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <% console.log(approvers.length) %>
+                                                                        <td>Accounting</td>
+                                                                        <td><%= approvers.account_data.name %></td>
+                                                                        <td>
+                                                                        
+                                                                            <% if (sales_sa.accounting_account_confirm == "false") {  %>
+                                                                                <div class="alert alert-dark text-center" role="alert">Pending</div>
+                                                                            <% }else{ %>
+                                                                                <div class="alert alert-success text-center" role="alert">Approved</div>
+                                                                            <% } %>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Warehouse</td>
+                                                                        <td><%= approvers.wms_data ? approvers.wms_data.name : '' %></td>
+                                                                        <td>
+                                                                            <% if (approvers.wms_account_confirm == "false") {  %>
+                                                                                <div class="alert alert-dark text-center" role="alert">Pending</div>
+                                                                            <% }else{ %>
+                                                                                <div class="alert alert-success text-center" role="alert">Approved</div>
+                                                                            <% } %>
+                                                                            <!-- <div class="alert alert-dark text-center" role="alert">Pending</div> -->
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    
+                                                    <div class="row">
+                                                        <div class="col-md-8 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="note"><%= language.note %> </label>
+                                                                <input type="number" class="form-control"
+                                                                    placeholder="note" id="note" name="note" value="<%= sales_sa.note %>" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                <div class="row">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                    <%- include('./partials/footer'); -%>
+    </div>
+                    <%- include('./partials/toastr'); -%>
+                    <%- include('./partials/script'); -%>
+       
+</body>
+
+</html>

@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+    <style>
+        .color-legend {
+            display: flex;
+            align-items: center;
+        }
+
+        .color-box {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+        .buttonload {
+            border: solid; 
+            border-width: 1px;
+            padding: 12px 24px; /* Some padding */
+            font-size: 16px; /* Set a font-size */
+            width: 150px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <div id="main-wrapper">
+        <%- include('./partials/header_logo'); -%>
+            <%- include('./partials/header',{titel: "Sales"}); -%>
+                <%- include('./partials/sidebar_sa'); -%>
+                    <div class="content-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <!-- <h4 class="card-title">adasd</h4> -->
+                                            <div class="form-group">
+                                                <label for="status_day"><b>Check this if you have other status today </b></label>
+                                                <input type="checkbox" class="form-check-input" id="status_day" name="status_day" onclick="show_transaction()" >
+                                            </div>
+                                                <button type="button" class="btn btn-rounded btn-outline-info"
+                                                    onclick="history.back()"><i class="la la-undo"></i> <%= language.go_back %> </button>
+                                            
+                                        </div>
+                                        <div class="card-body" id="invoice_transaction">
+                                            <div class="form-validation">
+                                                <form class="needs-validation" action="/sales_sa/add_sales"
+                                                    method="post" id="form" enctype="multipart/form-data">
+                                                    <div class="row mb-3">
+                                                        <div class="col-xl-4 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.customer %>  <span class="text-red">*</span></label>
+                                                                <input type="text" name="customer" class="form-control" id="customer" required>
+                                                                <!-- <select class="form-control" name="customer"
+                                                                    id="customer" required>
+                                                                    <option value selected disabled>Select One</option>
+                                                                    <% customer.forEach((customer)=> { %>
+                                                                        <option value="<%= customer.name %>">
+                                                                            <%= customer.name %>
+                                                                        </option>
+                                                                        <% }) %>
+                                                                </select> -->
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- <div class="col-xl-4 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no">Type Of Discount  <span class="text-red">*</span></label>
+                                                                <select class="form-control" name="type_discount" id="type_discount" onchange="toggleVolumeDeals()" required>
+                                                                    <option value selected disabled>Select One</option>
+                                                                    <option value="cust_spec">Customer Specific</option>
+                                                                    <option value="vol_deals">Volume Deals</option>
+                                                                </select>
+                                                            </div>
+                                                        </div> -->
+
+
+                                                        <div class="col-xl-4 col-sm-4" id="volume_deals" style="display: none;">
+                                                            <div class="form-group">
+                                                                <!-- <label for="invoice_no">Type Of Discount  <span class="text-red">*</span></label> -->
+                                                                <input type="radio" id="volume_deals_type" name="volume_deals_type" class="form-check-input" onclick="volume_general()" value="appl">
+                                                                <label for="volume_deals_type">Applied</label><br>
+
+                                                                <input type="radio" id="volume_deals_type" name="volume_deals_type" class="form-check-input" onclick="volume_general()" value="uappl">
+                                                                <label for="volume_deals_type">Unapplied</label><br>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-xl-4 col-sm-4" id="custom_specific" style="display: none;">
+                                                            <div class="form-group" id="customer_view">
+                                                                <!-- <input type="checkbox" id="age1" name="age" class="form-check-input" value="uappl">
+                                                                <label for="age1">3%</label><br>
+                                                                <input type="checkbox" id="age1" name="age" class="form-check-input" value="uappl">
+                                                                <label for="age1">3%</label><br> -->
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-xl-4 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.date %> <span class="text-red">*</span></label>
+                                                                <input type="date" name="date" class="form-control"
+                                                                    id="date" required>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-xl-4 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no">DSI<span class="text-red">*</span></label>
+                                                                <input type="text" name="DSI" class="form-control"
+                                                                    id="DSI" required>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label for="form-label" class="col-form-label">Upload File </label>
+                                                                <input type="file" placeholder="photo" class="form-control" name="image" value="" id="file_image">
+
+                                                                <input type="hidden" placeholder="photo" class="form-control" name="hidden" value="0" id="file_image_hidden">
+                                                            </div>
+                                                        </div>
+
+
+
+                                                            
+                                                    </div>
+                                                    <div class="row mb-3">
+                                                    </div>
+                                                    <div class="row mb-3">
+                                                        <div class="col-xl-4 col-sm-6">
+                                                            <select class="form-control" id="product_down">
+                                                                <option value="">Select Product</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-xl-2 col-sm-6">
+                                                            <input type="button" class="btn btn-primary" id="rfrshData" value="Refresh Product List">
+                                                            <span id="loadingIcon" class="btn btn-primary" style="display: none;"> <i class="fas fa-spinner fa-spin"></i>Loading</span>
+                                                        </div>
+
+                                                        
+                                                    </div>
+                                                    <!-- <div class="row mb-3">
+                                                        <div class="col-xl-4 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no">Status Paid <span class="text-red">*</span></label>
+                                                                <select class="form-control" name="paid_status">
+                                                                    <option value="False">Pending</option>
+                                                                    <option value="True">Paid</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div> -->
+                                                      <!-- <fieldset>
+                                                        <legend>Expiration Color Legend</legend>
+                                                        <div class="color-legend">
+                                                            <div class="color-box" style="background-color: red;"></div>
+
+                                                            <span>The product has expired.</span>
+
+                                                        </div>
+                                                        <div class="color-legend">
+                                                            <div class="color-box" style="background-color: grey;"></div>
+                                                            <span>1 month before expiration</span>
+                                                        </div>
+                                                        <div class="color-legend">
+                                                            <div class="color-box" style="background-color: yellow;"></div>
+                                                            <span>2 to 4 months before expiration</span>
+                                                        </div>
+                                                        <div class="color-legend">
+                                                            <div class="color-box" style="background-color: green;"></div>
+                                                            <span>4 months and beyond expiration</span>
+                                                        </div>
+                                                    
+                                                    </fieldset> -->
+                                                    <div class="col-xl-12">
+                                                        <div class="table-responsive">
+                                                            <table class="table primary-table-bordered" id="sales_tbl_new">
+                                                                <thead class="thead-primary">
+                                                                    <tr>
+                                                                        <th scope="col">is Free Goods</th>
+                                                                        <th scope="col">Item Code </th>
+                                                                        <th scope="col">Item Description </th>
+                                                                        <!-- <th scope="col">Primary Barcode </th>
+                                                                        <th scope="col">Batch Code</th>
+                                                                        <th scope="col">Production date </th>
+                                                                        <th scope="col">Expiry date </th> -->
+                                                                        <!-- <th scope="col"><%= language.in_stock %> </th> -->
+                                                                        <th scope="col"><%= language.quantity %> <span class="text-red">*</span></th>
+                                                                        <th scope="col">Unit of Measure </th>
+                                                                        <th scope="col">Conversion </th>
+                                                                        <th scope="col">Price </th>
+                                                                        <!-- <th scope="col">Allowable Discount Price </th> -->
+                                                                        <th scope="col">Discount Adjustment </th>
+                                                                        <th scope="col">Total Price </th>
+                                                                        <th scope="col">Action</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="tblPage_NewOut">
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row d-flex justify-content-end">
+                                                        <div class="col-md-6 col-sm-6 table-responsive" >
+
+                                                            <table class="table primary-table-bordered">
+                                                                <thead class="thead-primary">
+                                                                    <tr style="text-align: center;">
+                                                                        <th scope="col" colspan="5">MODE OF PAYMENTS</th>
+                                                                    </tr>
+                                                                    <tr style="text-align: center;">
+                                                                        <th scope="col" style="text-align: center;" rowspan="2">CASH</th>
+                                                                        <th scope="col" style="text-align: center;" rowspan="2">AMOUNT</th>
+                                                                        <th scope="col" style="text-align: center;" colspan="3">CHECK</th>
+                                                                        
+                                                                    </tr>
+
+                                                                    <tr style="text-align: center;">
+                                                                        <th scope="col" rowspan="1">BANK</th>
+                                                                        <th scope="col" rowspan="1">CHECK #</th>
+                                                                        <th scope="col" rowspan="1">DUE DATE</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody style="text-align: right;">
+                                                                    <tr>
+                                                                        <td><input type="number" class="form-control" name="cash_amount" id="cash_amount"></td>
+                                                                        <td><input type="number" class="form-control" name="amount_data" id="amount_data"></td>
+                                                                        <td><input type="text" class="form-control" name="bank_data" id="bank_data"></td>
+                                                                        <td><input type="text" class="form-control" name="check_no" id="check_no"></td>
+                                                                        <td><input type="date" class="form-control" name="due_date" id="due_date"></td>
+                                                                    </tr>
+                                                                    
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        
+                                                    </div>
+
+
+                                                    <div class="row">
+                                                        <div class="col-md-8 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="note"><%= language.note %> </label>
+                                                                <input type="text" class="form-control"
+                                                                    placeholder="note" id="note" name="note">
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                </form>
+                                                <div class="row">
+                                                    <button class="btn btn-primary" type="submit" id="purchase_submit"  >Submit </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="card-body" id="nothing_report">
+                                            <div class="form-validation">
+                                                <form class="needs-validation" action="/sales_sa/add_sales_notes"
+                                                    method="post" id="form_data">
+                                                    <div class="row mb-3">
+                                                        <div class="col-xl-4 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.date %> <span class="text-red">*</span></label>
+                                                                <input type="date" name="date_data" class="form-control"
+                                                                    id="date_data" required>
+<!-- status_data -->
+                                                                    <input type="hidden" name="status_data" value="true">
+                                                            </div>
+                                                        </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12 col-sm-12">
+                                                            <div class="form-group">
+                                                                <label for="note"><%= language.note %> </label>
+                                                                <textarea type="text" class="form-control"
+                                                                    placeholder="note" id="note_data" name="note_data" rows="15"></textarea>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                </form>
+                                                <div class="row">
+                                                    <button class="btn btn-primary" type="submit" id="purchase_submit_data"  >Submit </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        <%- include('./partials/footer'); -%>
+    </div>
+        <%- include('./partials/toastr'); -%>
+        <%- include('./partials/script'); -%>
+        <script>
+            function product_load(){
+                document.getElementById('rfrshData').style.display = 'none';
+                document.getElementById('loadingIcon').style.display = 'inline-block';
+            }
+            function Limit_Date_Today(){
+                var dtToday = new Date();
+                var month = dtToday.getMonth() + 1;
+                var day = dtToday.getDate();
+                var year = dtToday.getFullYear();
+                if(month < 10)
+                    month = '0' + month.toString();
+                if(day < 10)
+                    day = '0' + day.toString();
+                var maxDate = year + '-' + month + '-' + day;
+                $('#date').attr('max', maxDate);
+            }
+            function ShowData_orig(){
+                $.ajax({
+                url: '/sales_sa/product_list',
+                method: 'POST',
+                // data: { isbool: "false" },
+                success: function (response) {
+                    let dataProduct = "";
+                    var datashowProduct = document.getElementById("product_down");
+                    dataProduct += "<option value=''>Select Product</option>";
+                    // console.log(response)
+                    for (let index = 0; index <= response.length - 1; index++) {
+                        const element = response[index];
+                        // console.log(element)
+                        // console.log(element.product_list.product_stock)
+                        if(element.product_list.product_stock > 0){
+                            dataProduct += "<option value="+element.product_list._id+">"+ element.product_list.product_name + "</option>";
+                        }
+                        
+                    }
+                 
+                    datashowProduct.innerHTML = dataProduct;
+                }
+            })
+                
+            }
+            function checkExpiration(expirationDate, x) {
+                const currentDate = new Date();
+                const expirationDate1 = new Date(expirationDate); 
+                const timeDifference = expirationDate1 - currentDate;
+                const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+
+                if(daysDifference <= 0){
+                    const element = document.getElementById("trtable" + x);
+                    element.style.backgroundColor = "red";
+                }else if (daysDifference <= 30) {
+                    const element = document.getElementById("trtable" + x);
+                    element.style.backgroundColor = "grey";
+                } else if (daysDifference <= 60 || daysDifference <= 120) {
+                    const element = document.getElementById("trtable" + x);
+                    element.style.backgroundColor = "yellow";
+                } else {
+                    const element = document.getElementById("trtable" + x);
+                    element.style.backgroundColor = "green";
+                }
+                return
+            }
+            function removeSelfRow(event) {
+                var row = $(event.target).closest('tr');
+                row.remove();
+            }
+            function computePerPrice(x) {
+                compute_conversion(x); 
+                var qty = document.getElementById("getPrimUnitNo"+x);
+                var price = document.getElementById("price"+x);
+                // var discount_price = document.getElementById("dicount_price"+x);
+                var totalPrice = document.getElementById("totalPrice"+x);
+
+                var totalAll = 0;
+                // console.log(qty.value+ " <> " +price.value + " <> " + discount_price.value)
+                // totalAll = qty.value*(price.value-discount_price.value);
+                totalAll = qty.value*price.value;
+                totalPrice.value = totalAll;
+            }
+
+            function toggleVolumeDeals() {
+                var typeDiscount = document.getElementById("type_discount").value;
+                var volumeDeals = document.getElementById("volume_deals");
+                var custom_specific_data = document.getElementById("custom_specific");
+                if (typeDiscount === "vol_deals") {
+                    volumeDeals.style.display = "block";
+                    custom_specific_data.style.display = "none";
+                } else if(typeDiscount === "cust_spec"){
+                    view_customer();
+                    volumeDeals.style.display = "none";
+                    custom_specific_data.style.display = "block";
+                } else {
+                    custom_specific_data.style.display = "none";
+                    volumeDeals.style.display = "none";
+                }
+            }
+            function view_customer(){
+                var data_discount = document.getElementById("customer_view");
+                var customer_value = document.getElementById("customer");
+
+                $.ajax({
+                        url: '/sales_sa/customer_data',
+                        method: 'POST',
+                        data: { customer_name : customer_value.value },
+                        success: function (response) {
+                            let data_view = "";
+
+                            for (let index = 0; index <= response.customer_discount.length - 1; index++) {
+
+                                const element = response.customer_discount[index];
+                                data_view += '<input type="checkbox" id="age1" name="age" class="form-check-input" onclick="data_grossprice()" value="'+element.less+'">   ';
+                                data_view += '<label for="age1">    Less '+element.less+'%</label><br>';
+
+                            }
+                            
+                            data_discount.innerHTML = data_view;
+                        }
+                })
+            }
+            function volume_general(){
+
+                $.ajax({
+                        url: '/sales_sa/volume_setup',
+                        method: 'POST',
+                        // data: { customer_name : customer_value.value },
+                        success: function (response) {
+
+                            // console.log(response.volume_discount)
+                            var theradio = document.getElementsByName("volume_deals_type");
+                            var type_discount = document.getElementById("type_discount");
+                            if(type_discount.value == "vol_deals"){
+                                for (let a = 0; a <= theradio.length -1; a++) {
+                                const choose_data = theradio[a];
+                                console.log(choose_data.value + " <> " + choose_data.checked)
+                                if(choose_data.value == "appl" && choose_data.checked == true){
+                                    var price = document.getElementsByName("price");
+                                    for (let i = 0; i <= price.length - 1; i++) {
+                                        const element_detl = price[i];
+                                        var theQTY = document.getElementById("getPrimUnitNo"+i).value;
+                                        for (let index = 0; index <= response.volume_discount.length - 1; index++) {
+                                            const element = response.volume_discount[index];
+                                            
+
+                                            if(element.min_car <= theQTY && element.max_car >= theQTY){
+                                                // console.log(element.min_car + " <> " + element.max_car + " <> " + element.discount_price)
+                                                // document.getElementById("dicount_price"+i).value = element.discount_price;
+                                                // document.getElementById("dicount_price"+i).readOnly = true;
+                                                computePerPrice(i)
+                                            }
+                                        }
+
+                                    }
+                                }else if(choose_data.value == "uappl" && choose_data.checked == true){
+                                    var price = document.getElementsByName("price");
+                                    for (let i = 0; i <= price.length - 1; i++) {
+                                        const element_detl = price[i];
+                                        var theQTY = document.getElementById("getPrimUnitNo"+i).value;
+                                        // document.getElementById("dicount_price"+i).value = 0;
+                                    }
+                                }
+                                // console.log()
+                            }
+                            
+                            }
+                            
+                            
+                        }
+                    })
+                
+            }
+            function data_grossprice(){
+                    var price = document.getElementsByName("price");
+                    for (let i = 0; i <= price.length - 1; i++) {
+                        const element_detl = price[i];
+                        var data_check = document.getElementsByName("age");
+                        var gross_price = element_detl.value;
+                        var thePriceDiscount = 0;
+                        var deeductPrice =0;
+                        var total_discount = 0;
+                        for (let index = 0; index <= data_check.length - 1; index++) {
+                            const element = data_check[index];
+                            if (element.checked == true) {
+                                var discount_percentage = parseFloat(element.value) / 100;
+                                var discount_amount = gross_price * discount_percentage;
+                                gross_price -= discount_amount;
+                                total_discount += discount_amount;
+                        }
+                        // document.getElementById("dicount_price"+i).value = total_discount.toFixed(2);
+                        // document.getElementById("totalPrice"+i).value = gross_price.toFixed(2);
+                        computePerPrice(i);
+                        // document.getElementById("dicount_price"+i).readOnly = true;
+                        
+                    }
+
+                }
+            }
+
+            function computePerPriceDiscount(x){
+                var qty = document.getElementById("getPrimUnitNo"+x);
+                var price = document.getElementById("price"+x);
+                var totalPrice = document.getElementById("totalPrice"+x);
+                // var dicount_price = document.getElementById("dicount_price"+x);
+                var adj_dicount_price = document.getElementById("adj_dicount_price"+x);
+
+                var totalAll = 0;
+                totalAll = qty.value*price.value;
+                // totalAll = totalAll- dicount_price.value ;
+                totalAll = totalAll- adj_dicount_price.value;
+
+
+                // console.log(totalAll + " - " + " ( " + dicount_price.value + " + " + adj_dicount_price.value + " ) ")
+                totalPrice.value = totalAll;
+            }
+
+            function checkingQuantityStocks(x) {
+                var qty_value = parseInt(document.getElementById("quantity" + x).value, 10);
+                var stock_qty = parseInt(document.getElementById("stock_qty" + x).value, 10);
+
+                if (stock_qty < qty_value) {
+                    Swal.fire({
+                        title: "Warning!",
+                        text: "The requested quantity exceeds the available stock.",
+                        icon: "warning"
+                    });
+                    computePerPrice(x)
+                    document.getElementById("quantity" + x).value = "";
+                    document.getElementById("price"+x).value = "";
+                }
+                if(qty_value <= 0){
+                    Swal.fire({
+                        title: "Warning!",
+                        text: "The requested quantity exceeds the available stock.",
+                        icon: "warning"
+                    });
+                    computePerPrice(x)
+                    document.getElementById("quantity" + x).value = "";
+                    document.getElementById("price"+x).value = "";
+                }
+                computePerPrice(x)
+                // if(){
+                    
+                // }
+            }
+
+            function checkFG(x){
+                var is_fg = document.getElementById("is_fg"+x);
+                var price = document.getElementById("price"+x).value;
+                // var dicount_price = document.getElementById("dicount_price"+x);
+                var adj_dicount_price = document.getElementById("adj_dicount_price"+x);
+                var totalPrice = document.getElementById("totalPrice"+x);
+                var tmpPrice = price;
+                if(is_fg.checked == true){
+                    document.getElementById("price"+x).value = 0;
+                    // document.getElementById("dicount_price"+x).value = 0;
+                    document.getElementById("adj_dicount_price"+x).value = 0;
+                    document.getElementById("totalPrice"+x).value = 0;
+                    document.getElementById("tmpisFG"+x).value = "true";
+
+                    // document.getElementById("dicount_price"+x).readOnly = true;
+                    document.getElementById("adj_dicount_price"+x).readOnly = true;
+                    document.getElementById("totalPrice"+x).readOnly = true;
+                }else{
+                    document.getElementById("price"+x).value = document.getElementById("tmpPrice"+x).value;
+                    // document.getElementById("dicount_price"+x).readOnly = false;
+                    document.getElementById("adj_dicount_price"+x).readOnly = false;
+                    document.getElementById("totalPrice"+x).readOnly = false;
+                    document.getElementById("tmpisFG"+x).value = "false";
+                }
+                
+                // console.log(is_fg.checked + " <> " + price + " <> " + tmpPrice )
+            }
+
+            function confirm_saved() {
+                Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Confirm"
+                })
+                .then((result) => {
+                if (result.isConfirmed) {
+                    var strTemp = '';
+                    var Customer = document.getElementById("customer");
+                    var Date = document.getElementById("date");
+
+
+                    Customer.style.borderColor = "";
+                    if(Customer.value.length == 0){
+                        strTemp += "Customer is required. <br>" 
+                        Customer.style.borderColor = "red";
+                        Customer.focus()
+                    }
+
+
+                    Date.style.borderColor = "";
+                    if(Date.value.length == 0){
+                        strTemp += "Date is required. <br>" 
+                        Date.style.borderColor = "red";
+                        Date.focus()
+                    }
+
+
+
+                    var table = document.getElementById("sales_tbl_new");
+                    var noofrow = table.rows.length -1;
+                    table.style.borderColor = "";
+                    if(noofrow == 0){
+                        strTemp += "Product list is empty. <br>"
+                        table.style.borderColor = "red";
+                    }
+
+
+
+                    var prod_qty = document.getElementsByName("quantity");
+                    var x = 1;
+                    for (let index = 0; index < prod_qty.length; index++) {
+                        const inputElement  = prod_qty[index];
+                        inputElement.style.borderColor = "";
+                        if(inputElement.value.length == 0){
+                            strTemp += x + ". Quantity  is required. <br>"
+                            inputElement.style.borderColor = "red";
+                            inputElement.focus()
+                        }
+                        x++;
+                    }
+
+
+
+                    var price_qty = document.getElementsByName("price");
+                    var x = 1;
+                    for (let index = 0; index < price_qty.length; index++) {
+                        const inputElement  = price_qty[index];
+                        inputElement.style.borderColor = "";
+                        if(inputElement.value.length == 0){
+                            strTemp += x + ". Price  is required. <br>"
+                            inputElement.style.borderColor = "red";
+                            inputElement.focus()
+                        }
+                        x++;
+                    }
+
+
+                    if(strTemp.length > 0){
+                        // modal.style.display = "none";
+                        Swal.fire(
+                        'Required ',
+                        "<h5>" + strTemp + "</h5>",
+                        'warning'
+                        )
+                        return;
+                    }
+                    document.getElementById("form").submit();
+                }
+                })
+            }
+
+            function ShowData(){
+                $.ajax({
+                url: '/sales_sa/getProductData',
+                method: 'POST',
+                // data: { isbool: "false" },
+                success: function (response) {
+                    let dataProduct = "";
+                    var datashowProduct = document.getElementById("product_down");
+                    dataProduct += "<option value=''>Select Product</option>";
+                    
+                    for (let index = 0; index <= response.length - 1; index++) {
+                        const element = response[index];
+                        // console.log(element)
+
+                        dataProduct += "<option value="+element._id+">"+ element.name + "</option>";
+                    //     // console.log(element)
+                    //     // console.log(element.product_list.product_stock)
+                    //     if(element.product_list.product_stock > 0){
+                    //         dataProduct += "<option value="+element.product_list._id+">"+ element.product_list.product_name + "</option>";
+                    //     }
+                        
+                    }
+                 
+                    datashowProduct.innerHTML = dataProduct;
+                }
+            })
+                
+            }
+
+            function getUOM(x,prim_unit, second_unit){
+         
+                var UOM_data =  document.getElementById("UOM"+x);
+                let option = "";
+                option += "<option value="+prim_unit+"~P"+">"+prim_unit+"</option>";
+                option += "<option value="+second_unit+"~S"+">"+second_unit+"</option>";
+                UOM_data.innerHTML = option;
+            }
+
+            function compute_conversion(x){
+                var quantity = document.getElementById("quantity"+x).value;
+                var UOM = document.getElementById("UOM"+x).value;
+                var conversion_unit = document.getElementById("conversion_unit"+x);
+                var no_per_unit = document.getElementById("no_per_unit"+x).value;
+                
+
+                var unit = document.getElementById("unit"+x).value;
+                var secondary_unit = document.getElementById("secondary_unit"+x).value;
+
+
+                let uom_data = UOM.split("~");
+                var totalQTY = 0;
+                if(uom_data[1] == "S"){
+                    totalQTY = parseFloat(quantity)/parseFloat(no_per_unit);
+                    conversion_unit.value = totalQTY.toFixed(2) + " " + unit;
+                    document.getElementById("prod_cat"+x).value=uom_data[1];
+                    document.getElementById("getPrimUnitNo"+x).value = totalQTY
+                    console.log(totalQTY)
+                }else{
+                    totalQTY = parseFloat(quantity)*parseFloat(no_per_unit);
+                    conversion_unit.value = totalQTY.toFixed(2) + " " + secondary_unit;
+                    document.getElementById("prod_cat"+x).value=uom_data[1];
+                    document.getElementById("getPrimUnitNo"+x).value = quantity
+                }
+            }
+
+            function show_transaction(){
+                var status_data = document.getElementById("status_day");
+                if(status_data.checked){
+                    document.getElementById('invoice_transaction').style.display = 'none';
+                    document.getElementById('nothing_report').style.display = 'inline-block';
+                }else{
+                    document.getElementById('invoice_transaction').style.display = 'inline-block';
+                    document.getElementById('nothing_report').style.display = 'none';
+                }
+                // document.getElementById('invoice_transaction').style.display = 'none';
+                // console.log(status_data.checked)
+            }
+
+            $(document).on('click', 'button#remove', function(event) {
+                    removeSelfRow(event);
+            });
+            $(document).ready(function() {
+                Limit_Date_Today();
+                ShowData();
+                
+
+                $('#rfrshData').on('click', function() {
+                    document.getElementById('rfrshData').style.display = 'none';
+                    document.getElementById('loadingIcon').style.display = 'inline-block';
+                    $.ajax({
+                        url: '/sales_sa/getProductData',
+                        method: 'POST',
+                        // data: { isbool: "false" },
+                        success: function (response) {
+                            let dataProduct = "";
+                            var datashowProduct = document.getElementById("product_down");
+                            dataProduct += "<option value=''>Select Product</option>";
+                            // for (let index = 0; index <= response.product_list.length - 1; index++) {
+                            //     const element = response.product_list[index];
+                            //     if(element.product_stock > 0){
+                            //         dataProduct += "<option value="+element._id+">"+ element.product_name +  "</option>";
+                            //     }
+                                
+                            // }
+
+                            for (let index = 0; index <= response.length - 1; index++) {
+                                const element = response[index];
+                                // console.log(element)
+
+                                dataProduct += "<option value="+element._id+">"+ element.name + "</option>";
+                            }
+                        
+                            datashowProduct.innerHTML = dataProduct;
+                            document.getElementById('rfrshData').style.display = 'inline-block';
+                            document.getElementById('loadingIcon').style.display = 'none';
+                        }
+                    })
+                })
+
+                
+                var x = 0;
+                // $('#product_down').on('change', function(data) {
+                //     var selectedValue = $(this).val();
+                //     // $.ajax({
+                //     //     url: '/sales_sa/product_data',
+                //     //     method: 'POST',
+                //     //     data: { id_data : selectedValue },
+                //     //     success: function (response) {
+                //     //         if(response.length > 0){
+
+                //     //             var existingIds = [];
+
+                //     //             // Iterate through existing rows to collect id_transaction values
+                //     //             $('#tblPage_NewOut tr').each(function() {
+                //     //                 var existingId = $(this).find('input[name="id_transaction"]').val();
+                //     //                 existingIds.push(existingId);
+                //     //             });
+
+                //     //             $.each(response, function(index, data) {
+                                
+                //     //                 if (existingIds.indexOf(data.product_list._id) === -1) {
+                //     //                     var row = $('<tr id="trtable'+x+'">');
+                //     //                     row.append($('<td>').html('<input type="checkbox" class="form-check-input" name="is_fg" id="is_fg'+x+'" onclick="checkFG('+x+')">'));
+                //     //                     row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="prod_code" value="' + data.product_list.product_code + '" readonly>'));
+                //     //                     row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="prod_name" value="' + data.product_list.product_name + '" readonly>'));
+                //     //                     // row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="primary_code" value="' + data.product_list.primary_code + '" readonly>'));
+                //     //                     // row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="batch_code" value="' + data.product_list.batch_code + '" readonly>'));
+                //     //                     // row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="production_date" value="' + data.product_list.production_date + '" readonly>'));
+                //     //                     // row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="expiry_date" value="' + data.product_list.expiry_date + '" readonly>'));
+                //     //                     row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="stock_qty" id="stock_qty'+x+'" value="' + data.product_list.product_stock + '" readonly>'));
+                //     //                     row.append($('<td>').html('<input type="number" class="form-control" style="width: 150px;" style="width: 150px;" name="quantity" onclick="computePerPrice('+x+');" oninput="checkingQuantityStocks('+x+'); computePerPrice('+x+'); volume_general(); " id="quantity'+x+'" value="" required>'));
+                //     //                     row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="UOM" value="' + data.product_list.unit + '" readonly>'));
+                //     //                     row.append($('<td>').html('<input type="number" class="form-control" style="width: 150px;" style="width: 150px;" name="price" id="price'+x+'" onkeyup="computePerPrice('+x+'); computePerPriceDiscount('+x+')" onclick="computePerPrice('+x+'); computePerPriceDiscount('+x+')" value="'+data.product_list.gross_price+'" readonly>'));
+                //     //                     row.append($('<td>').html('<input type="number" class="form-control" style="width: 150px;" style="width: 150px;" name="dicount_price" id="dicount_price'+x+'" onkeyup="computePerPriceDiscount('+x+')" value="">'));
+                //     //                     row.append($('<td>').html('<input type="number" class="form-control" style="width: 150px;" style="width: 150px;" name="adj_dicount_price" id="adj_dicount_price'+x+'" onkeyup="computePerPriceDiscount('+x+')" value="">'));
+                //     //                     row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="totalPrice" id="totalPrice'+x+'" value="" readonly>'));
+                //     //                     row.append($('<td>').html('<button type="button" class="btn btn-square btn-outline-warning" id="remove">Remove</button>'));
+                //     //                     $('<input>').attr({
+                //     //                         type: 'hidden',
+                //     //                         id: 'tmpisFG'+x,
+                //     //                         name: 'tmpisFG',
+                //     //                         value: "false"
+                //     //                     }).appendTo(row);
+
+                //     //                     $('<input>').attr({
+                //     //                         type: 'hidden',
+                //     //                         id: 'tmpPrice'+x,
+                //     //                         name: 'tmpPrice',
+                //     //                         value: data.product_list.gross_price
+                //     //                     }).appendTo(row);
+
+                //     //                     $('<input>').attr({
+                //     //                         type: 'hidden',
+                //     //                         id: 'expiry_date',
+                //     //                         name: 'expiry_date',
+                //     //                         value: data.product_list.expiry_date
+                //     //                     }).appendTo(row);
+
+
+                //     //                     $('<input>').attr({
+                //     //                         type: 'hidden',
+                //     //                         id: 'production_date',
+                //     //                         name: 'production_date',
+                //     //                         value: data.product_list.production_date
+                //     //                     }).appendTo(row);
+
+
+                //     //                     $('<input>').attr({
+                //     //                         type: 'hidden',
+                //     //                         id: 'batch_code',
+                //     //                         name: 'batch_code',
+                //     //                         value: data.product_list.batch_code
+                //     //                     }).appendTo(row);
+
+                //     //                     $('<input>').attr({
+                //     //                         type: 'hidden',
+                //     //                         id: 'primary_code',
+                //     //                         name: 'primary_code',
+                //     //                         value: data.product_list.primary_code
+                //     //                     }).appendTo(row);
+
+                //     //                     $('<input>').attr({
+                //     //                         type: 'hidden',
+                //     //                         id: 'id_transaction',
+                //     //                         name: 'id_transaction',
+                //     //                         value: data.product_list._id
+                //     //                     }).appendTo(row);
+
+                                        
+                                        
+                //     //                     $('#tblPage_NewOut').append(row);
+                //     //                     data_grossprice();
+                //     //                     volume_general();
+                //     //                     // checkExpiration(data.product_list.expiry_date, x);
+                //     //                     x++;
+                //     //                 }else{
+                //     //                     Swal.fire(
+                //     //                     '',
+                //     //                     data.product_list.product_name + ' is already exist!',
+                //     //                     'info'
+                //     //                     )
+                //     //                 }
+                                    
+                //     //             })
+                //     //         }
+                //     //     },
+                //     //     error: function(xhr, status, error) {
+                //     //         Swal.fire(
+                //     //         '',
+                //     //         'We were unable to locate the barcode you entered. Please try scanning another barcode.',
+                //     //         'warning'
+                //     //         )
+                //     //     }
+                //     // })
+                
+
+
+                //     $.ajax({
+                //         url: '/sales_sa/product_data',
+                //         method: 'POST',
+                //         data: { id_data : selectedValue },
+                //         success: function (response) {
+                //             if(response.length > 0){
+
+                //                 var existingIds = [];
+
+                //                 // Iterate through existing rows to collect id_transaction values
+                //                 $('#tblPage_NewOut tr').each(function() {
+                //                     var existingId = $(this).find('input[name="id_transaction"]').val();
+                //                     existingIds.push(existingId);
+                //                 });
+
+                //                 $.each(response, function(index, data) {
+                                
+                //                     if (existingIds.indexOf(data.product_list._id) === -1) {
+                //                         var row = $('<tr id="trtable'+x+'">');
+                //                         row.append($('<td>').html('<input type="checkbox" class="form-check-input" name="is_fg" id="is_fg'+x+'" onclick="checkFG('+x+')">'));
+                //                         row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="prod_code" value="' + data.product_list.product_code + '" readonly>'));
+                //                         row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="prod_name" value="' + data.product_list.product_name + '" readonly>'));
+                //                         row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="stock_qty" id="stock_qty'+x+'" value="' + data.product_list.product_stock + '" readonly>'));
+                //                         row.append($('<td>').html('<input type="number" class="form-control" style="width: 150px;" style="width: 150px;" name="quantity" onclick="computePerPrice('+x+');" oninput="checkingQuantityStocks('+x+'); computePerPrice('+x+'); volume_general(); " id="quantity'+x+'" value="" required>'));
+                //                         row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="UOM" value="' + data.product_list.unit + '" readonly>'));
+                //                         row.append($('<td>').html('<input type="number" class="form-control" style="width: 150px;" style="width: 150px;" name="price" id="price'+x+'" onkeyup="computePerPrice('+x+'); computePerPriceDiscount('+x+')" onclick="computePerPrice('+x+'); computePerPriceDiscount('+x+')" value="'+data.product_list.gross_price+'" readonly>'));
+                //                         row.append($('<td>').html('<input type="number" class="form-control" style="width: 150px;" style="width: 150px;" name="dicount_price" id="dicount_price'+x+'" onkeyup="computePerPriceDiscount('+x+')" value="">'));
+                //                         row.append($('<td>').html('<input type="number" class="form-control" style="width: 150px;" style="width: 150px;" name="adj_dicount_price" id="adj_dicount_price'+x+'" onkeyup="computePerPriceDiscount('+x+')" value="">'));
+                //                         row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="totalPrice" id="totalPrice'+x+'" value="" readonly>'));
+                //                         row.append($('<td>').html('<button type="button" class="btn btn-square btn-outline-warning" id="remove">Remove</button>'));
+                //                         $('<input>').attr({
+                //                             type: 'hidden',
+                //                             id: 'tmpisFG'+x,
+                //                             name: 'tmpisFG',
+                //                             value: "false"
+                //                         }).appendTo(row);
+
+                //                         $('<input>').attr({
+                //                             type: 'hidden',
+                //                             id: 'tmpPrice'+x,
+                //                             name: 'tmpPrice',
+                //                             value: data.product_list.gross_price
+                //                         }).appendTo(row);
+
+                //                         $('<input>').attr({
+                //                             type: 'hidden',
+                //                             id: 'expiry_date',
+                //                             name: 'expiry_date',
+                //                             value: data.product_list.expiry_date
+                //                         }).appendTo(row);
+
+
+                //                         $('<input>').attr({
+                //                             type: 'hidden',
+                //                             id: 'production_date',
+                //                             name: 'production_date',
+                //                             value: data.product_list.production_date
+                //                         }).appendTo(row);
+
+
+                //                         $('<input>').attr({
+                //                             type: 'hidden',
+                //                             id: 'batch_code',
+                //                             name: 'batch_code',
+                //                             value: data.product_list.batch_code
+                //                         }).appendTo(row);
+
+                //                         $('<input>').attr({
+                //                             type: 'hidden',
+                //                             id: 'primary_code',
+                //                             name: 'primary_code',
+                //                             value: data.product_list.primary_code
+                //                         }).appendTo(row);
+
+                //                         $('<input>').attr({
+                //                             type: 'hidden',
+                //                             id: 'id_transaction',
+                //                             name: 'id_transaction',
+                //                             value: data.product_list._id
+                //                         }).appendTo(row);
+
+                                        
+                                        
+                //                         $('#tblPage_NewOut').append(row);
+                //                         data_grossprice();
+                //                         volume_general();
+                //                         // checkExpiration(data.product_list.expiry_date, x);
+                //                         x++;
+                //                     }else{
+                //                         Swal.fire(
+                //                         '',
+                //                         data.product_list.product_name + ' is already exist!',
+                //                         'info'
+                //                         )
+                //                     }
+                                    
+                //                 })
+                //             }
+                //         },
+                //         error: function(xhr, status, error) {
+                //             Swal.fire(
+                //             '',
+                //             'We were unable to locate the barcode you entered. Please try scanning another barcode.',
+                //             'warning'
+                //             )
+                //         }
+                //     })
+                // })
+            
+                $('#purchase_submit').on('click', function(data) {
+                    confirm_saved();
+                })
+
+
+                $('#purchase_submit_data').on('click', function(data) {
+                    // confirm_saved();
+                    document.getElementById("form_data").submit();
+                })
+
+                
+
+                $('#product_down').on('change', function(data) {
+                    var selectedValue = $(this).val();
+                    // $.ajax({
+                    //     url: '/sales_sa/product_data',
+                    //     method: 'POST',
+                    //     data: { id_data : selectedValue },
+                    //     success: function (response) {
+                    //         if(response.length > 0){
+
+                    //             var existingIds = [];
+
+                    //             // Iterate through existing rows to collect id_transaction values
+                    //             $('#tblPage_NewOut tr').each(function() {
+                    //                 var existingId = $(this).find('input[name="id_transaction"]').val();
+                    //                 existingIds.push(existingId);
+                    //             });
+
+                    //             $.each(response, function(index, data) {
+                                
+                    //                 if (existingIds.indexOf(data.product_list._id) === -1) {
+                    //                     var row = $('<tr id="trtable'+x+'">');
+                    //                     row.append($('<td>').html('<input type="checkbox" class="form-check-input" name="is_fg" id="is_fg'+x+'" onclick="checkFG('+x+')">'));
+                    //                     row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="prod_code" value="' + data.product_list.product_code + '" readonly>'));
+                    //                     row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="prod_name" value="' + data.product_list.product_name + '" readonly>'));
+                    //                     // row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="primary_code" value="' + data.product_list.primary_code + '" readonly>'));
+                    //                     // row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="batch_code" value="' + data.product_list.batch_code + '" readonly>'));
+                    //                     // row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="production_date" value="' + data.product_list.production_date + '" readonly>'));
+                    //                     // row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="expiry_date" value="' + data.product_list.expiry_date + '" readonly>'));
+                    //                     row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="stock_qty" id="stock_qty'+x+'" value="' + data.product_list.product_stock + '" readonly>'));
+                    //                     row.append($('<td>').html('<input type="number" class="form-control" style="width: 150px;" style="width: 150px;" name="quantity" onclick="computePerPrice('+x+');" oninput="checkingQuantityStocks('+x+'); computePerPrice('+x+'); volume_general(); " id="quantity'+x+'" value="" required>'));
+                    //                     row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="UOM" value="' + data.product_list.unit + '" readonly>'));
+                    //                     row.append($('<td>').html('<input type="number" class="form-control" style="width: 150px;" style="width: 150px;" name="price" id="price'+x+'" onkeyup="computePerPrice('+x+'); computePerPriceDiscount('+x+')" onclick="computePerPrice('+x+'); computePerPriceDiscount('+x+')" value="'+data.product_list.gross_price+'" readonly>'));
+                    //                     row.append($('<td>').html('<input type="number" class="form-control" style="width: 150px;" style="width: 150px;" name="dicount_price" id="dicount_price'+x+'" onkeyup="computePerPriceDiscount('+x+')" value="">'));
+                    //                     row.append($('<td>').html('<input type="number" class="form-control" style="width: 150px;" style="width: 150px;" name="adj_dicount_price" id="adj_dicount_price'+x+'" onkeyup="computePerPriceDiscount('+x+')" value="">'));
+                    //                     row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="totalPrice" id="totalPrice'+x+'" value="" readonly>'));
+                    //                     row.append($('<td>').html('<button type="button" class="btn btn-square btn-outline-warning" id="remove">Remove</button>'));
+                    //                     $('<input>').attr({
+                    //                         type: 'hidden',
+                    //                         id: 'tmpisFG'+x,
+                    //                         name: 'tmpisFG',
+                    //                         value: "false"
+                    //                     }).appendTo(row);
+
+                    //                     $('<input>').attr({
+                    //                         type: 'hidden',
+                    //                         id: 'tmpPrice'+x,
+                    //                         name: 'tmpPrice',
+                    //                         value: data.product_list.gross_price
+                    //                     }).appendTo(row);
+
+                    //                     $('<input>').attr({
+                    //                         type: 'hidden',
+                    //                         id: 'expiry_date',
+                    //                         name: 'expiry_date',
+                    //                         value: data.product_list.expiry_date
+                    //                     }).appendTo(row);
+
+
+                    //                     $('<input>').attr({
+                    //                         type: 'hidden',
+                    //                         id: 'production_date',
+                    //                         name: 'production_date',
+                    //                         value: data.product_list.production_date
+                    //                     }).appendTo(row);
+
+
+                    //                     $('<input>').attr({
+                    //                         type: 'hidden',
+                    //                         id: 'batch_code',
+                    //                         name: 'batch_code',
+                    //                         value: data.product_list.batch_code
+                    //                     }).appendTo(row);
+
+                    //                     $('<input>').attr({
+                    //                         type: 'hidden',
+                    //                         id: 'primary_code',
+                    //                         name: 'primary_code',
+                    //                         value: data.product_list.primary_code
+                    //                     }).appendTo(row);
+
+                    //                     $('<input>').attr({
+                    //                         type: 'hidden',
+                    //                         id: 'id_transaction',
+                    //                         name: 'id_transaction',
+                    //                         value: data.product_list._id
+                    //                     }).appendTo(row);
+
+                                        
+                                        
+                    //                     $('#tblPage_NewOut').append(row);
+                    //                     data_grossprice();
+                    //                     volume_general();
+                    //                     // checkExpiration(data.product_list.expiry_date, x);
+                    //                     x++;
+                    //                 }else{
+                    //                     Swal.fire(
+                    //                     '',
+                    //                     data.product_list.product_name + ' is already exist!',
+                    //                     'info'
+                    //                     )
+                    //                 }
+                                    
+                    //             })
+                    //         }
+                    //     },
+                    //     error: function(xhr, status, error) {
+                    //         Swal.fire(
+                    //         '',
+                    //         'We were unable to locate the barcode you entered. Please try scanning another barcode.',
+                    //         'warning'
+                    //         )
+                    //     }
+                    // })
+                
+
+
+                    $.ajax({
+                        url: '/sales_sa/product_data_id',
+                        method: 'POST',
+                        data: { id_data : selectedValue },
+                        success: function (response) {
+                            // console.log(response.length)
+                           
+
+                                var existingIds = [];
+
+                                // Iterate through existing rows to collect id_transaction values
+                                $('#tblPage_NewOut tr').each(function() {
+                                    var existingId = $(this).find('input[name="id_transactiona"]').val();
+                                    existingIds.push(existingId);
+                                });
+
+                                
+                                console.log(response)
+                                    
+                                    if (existingIds.indexOf(response._id) === -1 && 1 == 1) {
+                                        var row = $('<tr id="trtable'+x+'">');
+                                        row.append($('<td>').html('<input type="checkbox" class="form-check-input" name="is_fg" id="is_fg'+x+'" onclick="checkFG('+x+')">'));
+                                        row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="prod_code" value="' + response.product_code + '" readonly>'));
+                                        row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="prod_name" value="' + response.name + '" readonly>'));
+                                        // row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="stock_qty" id="stock_qty'+x+'" value="" readonly>'));
+                                        // row.append($('<td>').html('<input type="number" class="form-control" style="width: 150px;" style="width: 150px;" name="quantity" onclick="computePerPrice('+x+');" oninput="checkingQuantityStocks('+x+'); computePerPrice('+x+'); volume_general(); " id="quantity'+x+'" value="" required>'));
+                                        row.append($('<td>').html('<input type="number" class="form-control" style="width: 150px;" style="width: 150px;" name="quantity" onclick="computePerPrice('+x+');" oninput="computePerPrice('+x+'); volume_general(); compute_conversion('+x+'); " id="quantity'+x+'" value="" required>'));
+                                        // row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="UOM" value="' + response.unit + '" readonly>'));
+                                        row.append($('<td>').html('<select class="form-control" style="width: 150px;" name="UOM" id="UOM'+x+'" onchange="computePerPrice('+x+'); compute_conversion('+x+');"></select>'));
+                                        row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="conversion_unit" id="conversion_unit'+x+'" readonly>'));
+                                        row.append($('<td>').html('<input type="number" class="form-control" style="width: 150px;" style="width: 150px;" name="price" id="price'+x+'" onkeyup="computePerPrice('+x+'); computePerPriceDiscount('+x+')" onclick="computePerPrice('+x+'); computePerPriceDiscount('+x+')" value="'+response.gross_price+'" readonly>'));
+                                        // row.append($('<td>').html('<input type="number" class="form-control" style="width: 150px;" style="width: 150px;" name="dicount_price" id="dicount_price'+x+'" onkeyup="computePerPriceDiscount('+x+')" value="">'));
+                                        row.append($('<td>').html('<input type="number" class="form-control" style="width: 150px;" style="width: 150px;" name="adj_dicount_price" id="adj_dicount_price'+x+'" onkeyup="computePerPriceDiscount('+x+')" value="">'));
+                                        row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="totalPrice" id="totalPrice'+x+'" value="" readonly>'));
+                                        row.append($('<td>').html('<button type="button" class="btn btn-square btn-outline-warning" id="remove">Remove</button>'));
+
+                                            $('<input>').attr({
+                                            type: 'hidden',
+                                            id: 'unit'+x,
+                                            name: 'unit',
+                                            value: response.unit
+                                        }).appendTo(row);
+
+                                        $('<input>').attr({
+                                            type: 'hidden',
+                                            id: 'secondary_unit'+x,
+                                            name: 'secondary_unit',
+                                            value:  response.second_unit
+                                        }).appendTo(row);
+
+                                        $('<input>').attr({
+                                            type: 'hidden',
+                                            id: 'prod_cat'+x,
+                                            name: 'prod_cat',
+                                            value:  ""
+                                        }).appendTo(row);
+
+                                        $('<input>').attr({
+                                            type: 'hidden',
+                                            id: 'getPrimUnitNo'+x,
+                                            name: 'getPrimUnitNo',
+                                            value:  ""
+                                        }).appendTo(row);
+
+                                        
+
+
+                                        $('<input>').attr({
+                                            type: 'hidden',
+                                            id: 'tmpisFG'+x,
+                                            name: 'tmpisFG',
+                                            value: "false"
+                                        }).appendTo(row);
+
+                                        $('<input>').attr({
+                                            type: 'hidden',
+                                            id: 'tmpPrice'+x,
+                                            name: 'tmpPrice',
+                                            value: response.gross_price
+                                        }).appendTo(row);
+
+                                        // $('<input>').attr({
+                                        //     type: 'hidden',
+                                        //     id: 'expiry_date',
+                                        //     name: 'expiry_date',
+                                        //     value: data.product_list.expiry_date
+                                        // }).appendTo(row);
+
+
+                                        // $('<input>').attr({
+                                        //     type: 'hidden',
+                                        //     id: 'production_date',
+                                        //     name: 'production_date',
+                                        //     value: data.product_list.production_date
+                                        // }).appendTo(row);
+
+
+                                        // $('<input>').attr({
+                                        //     type: 'hidden',
+                                        //     id: 'batch_code',
+                                        //     name: 'batch_code',
+                                        //     value: data.product_list.batch_code
+                                        // }).appendTo(row);
+
+                                        $('<input>').attr({
+                                            type: 'hidden',
+                                            id: 'primary_code',
+                                            name: 'primary_code',
+                                            value: response.primary_code
+                                        }).appendTo(row);
+
+
+                                        $('<input>').attr({
+                                            type: 'hidden',
+                                            id: 'no_per_unit'+x,
+                                            name: 'no_per_unit',
+                                            value: response.maxProdPerUnit
+                                        }).appendTo(row);
+
+                                        $('<input>').attr({
+                                            type: 'hidden',
+                                            id: 'id_transaction',
+                                            name: 'id_transaction',
+                                            value: response._id
+                                        }).appendTo(row);
+
+                                        
+                                        
+                                        $('#tblPage_NewOut').append(row);
+                                        data_grossprice();
+                                        volume_general();
+                                        getUOM(x, response.unit,  response.second_unit);
+                                        // checkExpiration(data.product_list.expiry_date, x);
+                                        x++;
+                                    }else{
+                                        Swal.fire(
+                                        '',
+                                        response.name + ' is already exist!',
+                                        'info'
+                                        )
+                                    }
+                                    
+                             
+                       
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire(
+                            '',
+                            'We were unable to locate the barcode you entered. Please try scanning another barcode.',
+                            'warning'
+                            )
+                        }
+                    })
+                })
+            
+                
+            })
+        
+        
+        </script>
+</body>
+
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+    <style>
+        .color-legend {
+            display: flex;
+            align-items: center;
+        }
+
+        .color-box {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+        .buttonload {
+            border: solid; 
+            border-width: 1px;
+            padding: 12px 24px; /* Some padding */
+            font-size: 16px; /* Set a font-size */
+            width: 150px;
+            height: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <div id="main-wrapper">
+        <%- include('./partials/header_logo'); -%>
+            <%- include('./partials/header',{titel: "Sales order Collection (Booking) "}); -%>
+                <%- include('./partials/sidebar_sa'); -%>
+                    <div class="content-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h4 class="card-title"></h4>
+                                            <button type="button" class="btn btn-rounded btn-outline-info" onclick="window.location.href='/sales_sa/'">
+                                                <i class="la la-undo"></i> <%= language.go_back %>
+                                            </button>
+                                            
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-validation">
+
+                                                <form class="needs-validation" action="/collection/view/<%= sales_sa._id %>"
+                                                    method="post" id="form">
+
+                                                    <div class="row mb-3">
+
+                                                        <div class="col-xl-3 col-sm-3">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no">Document Number  <span class="text-red">*</span></label>
+                                                                <span><h3><%= sales_sa.invoice %></h3></span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xl-3 col-sm-3">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.customer %>  <span class="text-red">*</span></label>
+                                                                <span><h3><%= sales_sa.customer %></h3></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-3 col-sm-3">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no">CR <%= language.date %> <span class="text-red">*</span></label>
+                                                                <span><h3><%= sales_sa.date %></h3></span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xl-3 col-sm-3">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no">Invoice Number<span class="text-red">*</span></label>
+                                                                <span><h3><%= sales_sa.dsi %></h3></span>
+                                                            </div>
+                                                        </div>
+                                                            
+                                                    </div>
+
+                                                    
+
+                                                    <% if (sales_sa.paid == "True") { %>
+                                                        <div class="row">
+                                                            <div class="col-xl-4 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label for="invoice_no">Collection Receipt Number<span class="text-red">*</span></label>
+                                                                    <input type="text" class="form-control text-center"  id="collectionnumber" name="collectionnumber" value="<%= sales_sa.collectionnumber %>" disabled>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-4 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label for="invoice_no">Type of Payment<span class="text-red">*</span></label>
+                                                                    <select class="form-control" name="typeofpayment" id="typeofpayment" disabled>
+                                                                        <option value="">Select</option>
+                                                                        <option value="cash" <%=sales_sa.type_of_payment=="cash" ? "selected" : "" %>>Cash</option>
+                                                                        <option value="cheque" <%=sales_sa.type_of_payment=="cheque" ? "selected" : "" %>>Cheque</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <% if (sales_sa.type_of_payment == "cheque") { %>
+                                                            <div class="col-xl-4 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label for="invoice_no">Cheque Date<span class="text-red">*</span></label>
+                                                                    <input type="date" class="form-control text-center"  id="cashdate" name="cashdate" value="<%= sales_sa.cash_date %>" disabled>
+                                                                </div>
+                                                            </div>
+    
+                                                            <% } %>
+                                                            
+    
+                                                        </div>
+                                                    <% }else { %>
+                                                        <div class="row">
+                                                            <div class="col-xl-4 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label for="invoice_no">Collection Receipt Number<span class="text-red">*</span></label>
+                                                                    <input type="text" class="form-control text-center"  id="collectionnumber" name="collectionnumber" value="<%= sales_sa.collectionnumber %>">
+                                                                </div>
+    
+                                                               
+    
+                                                            </div>
+    
+                                                            <div class="col-xl-4 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label for="invoice_no">Type of Payment<span class="text-red">*</span></label>
+                                                                    <select class="form-control" name="typeofpayment" id="typeofpayment"  onchange="toggleChequeDate()">
+                                                                        <option value="">Select</option>
+                                                                        <option value="cash" <%=sales_sa.type_of_payment=="cash" ? "selected" : "" %>>Cash</option>
+                                                                        <option value="cheque" <%=sales_sa.type_of_payment=="cheque" ? "selected" : "" %>>Cheque</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+    
+                                                            <div class="col-xl-4 col-sm-4" id="chequeDateContainer" style="display: none;">
+                                                                <div class="form-group">
+                                                                    <label for="invoice_no">Cheque Date<span class="text-red">*</span></label>
+                                                                    <input type="date" class="form-control text-center"  id="cashdate" name="cashdate" value="<%= sales_sa.cash_date %>">
+                                                                </div>
+                                                            </div>
+    
+    
+                                                            
+    
+                                                        </div>
+                                                    <% } %>
+                                                    
+
+
+                                                    
+                                                    <div class="col-xl-12">
+                                                        <div class="table-responsive">
+                                                            <table class="table primary-table-bordered" id="sales_tbl_new">
+                                                                <thead class="thead-primary">
+                                                                    <tr>
+                                                                        <!-- <th scope="col">Item Code </th> -->
+                                                                        <th scope="col">Item Description </th>
+                                                                        <!-- <th scope="col">Primary Barcode </th>
+                                                                        <th scope="col">Batch Code</th>
+                                                                        <th scope="col">Production date </th>
+                                                                        <th scope="col">Expiry date </th> -->
+                                                                        <th scope="col"><%= language.in_stock %> </th>
+                                                                        <th scope="col"><%= language.quantity %> <span class="text-red">*</span></th>
+                                                                        <th scope="col">UOM </th>
+                                                                        <th scope="col">Invoice Price </th>
+                                                                        <th scope="col">Discount Price </th>
+                                                                        <th scope="col">EWT </th>
+                                                                        <th scope="col">SPWP </th>
+                                                                        <th scope="col">Fin Disct </th>
+                                                                        <th scope="col">Volume Deals </th>
+                                                                        <th scope="col">BO </th>
+                                                                        <th scope="col">Collection Amount</th>
+                                                                        <!-- <th scope="col">Collection </th> -->
+                                                                    </tr>
+                                                                </thead>
+                                                                <% var total = 0; %>
+                                                                <% var totalqty = 0; %>
+                                                                <% var totalprices = 0; %>
+                                                                <% var totaldiscprice = 0; %>
+
+                                                                <% var totaldiscewt= 0; %>
+                                                                <% var totaldiscspwp = 0; %>
+                                                                <% var totaldiscfin_disc = 0; %>
+                                                                <% var totaldiscvol_deals = 0; %>
+                                                                <% var totaldiscbo = 0; %>
+                                                                <% var totalcollection = 0; %>
+                                                                <% 
+                                                                    const nFormat = new Intl.NumberFormat();
+                                                                %>
+                                                                <tbody id="tblPage_NewOut">
+                                                                    <% var x = 0 %>
+                                                                    <% sales_sa.sale_product.map((data) => { %>
+                                                                        <tr class="text-center">
+                                                                            <!-- <td><%= data.product_code %></td> -->
+                                                                            <td><%= data.product_name %></td>
+                                                                            <!-- <td><%= data.primary_code %></td>
+                                                                            <td><%= data.batch_code %></td>
+                                                                            <td><%= data.production_date %></td>
+                                                                            <td><%= data.expiry_date %></td> -->
+                                                                            <td><%= data.stock %></td>
+                                                                            <td><%= nFormat.format(data.quantity) %></td>
+                                                                            <td><%= data.unit %></td>
+                                                                            <td><%= nFormat.format(data.price) %></td>
+                                                                            <input type="hidden" name="qty" id="qty<%= x %>" value="<%= data.quantity %>">
+                                                                            <input type="hidden" name="price" id="price<%= x %>" value="<%= data.price %>">
+                                                                            <input type="hidden" name="discount_price" id="discount_price<%= x %>" value="<%= (data.discount != null && !isNaN(data.discount)) ? data.discount : 0 %>">
+                                                                            <td><%= (data.discount != null && !isNaN(data.discount)) ? nFormat.format(data.discount) : 0 %></td>
+
+                                                                            <% if (sales_sa.paid == "True") { %>
+
+                                                                            <td><input type="number" class="form-control text-center" id="ewt<%= x %>" name="ewt" value="<%= (data.ewt != null && !isNaN(data.ewt)) ? nFormat.format(data.ewt) : 0 %>" oninput="computeTotal('<%= x %>')" disabled></td>
+                                                                            <td><input type="number" class="form-control text-center" id="spwp<%= x %>" name="spwp" value="<%= (data.spwp != null && !isNaN(data.spwp)) ? nFormat.format(data.spwp) : 0 %>" oninput="computeTotal('<%= x %>')" disabled></td>
+                                                                            <td><input type="number" class="form-control text-center" id="fin_disc<%= x %>" name="fin_disc" value="<%= (data.fin_disc != null && !isNaN(data.fin_disc)) ? nFormat.format(data.fin_disc) : 0 %>" oninput="computeTotal('<%= x %>')" disabled></td>
+                                                                            <td><input type="number" class="form-control text-center" id="vol_deals<%= x %>" name="vol_deals" value="<%= (data.vol_deals != null && !isNaN(data.vol_deals)) ? nFormat.format(data.vol_deals) : 0 %>" oninput="computeTotal('<%= x %>')" disabled></td>
+                                                                            <td><input type="number" class="form-control text-center" id="bo_disc<%= x %>" name="bo_disc" value="<%= (data.bo_disc != null && !isNaN(data.bo_disc)) ? nFormat.format(data.bo_disc) : 0 %>" oninput="computeTotal('<%= x %>')" disabled></td>
+                                                                            
+
+                                                                            <% } else { %>
+
+                                                                            <td><input type="number" class="form-control text-center" id="ewt<%= x %>" name="ewt" value="<%= (data.ewt != null && !isNaN(data.ewt)) ? nFormat.format(data.ewt) : 0 %>" oninput="computeTotal('<%= x %>')"></td>
+                                                                            <td><input type="number" class="form-control text-center" id="spwp<%= x %>" name="spwp" value="<%= (data.spwp != null && !isNaN(data.spwp)) ? nFormat.format(data.spwp) : 0 %>" oninput="computeTotal('<%= x %>')"></td>
+                                                                            <td><input type="number" class="form-control text-center" id="fin_disc<%= x %>" name="fin_disc" value="<%= (data.fin_disc != null && !isNaN(data.fin_disc)) ? nFormat.format(data.fin_disc) : 0 %>" oninput="computeTotal('<%= x %>')"></td>
+                                                                            <td><input type="number" class="form-control text-center" id="vol_deals<%= x %>" name="vol_deals" value="<%= (data.vol_deals != null && !isNaN(data.vol_deals)) ? nFormat.format(data.vol_deals) : 0 %>" oninput="computeTotal('<%= x %>')"></td>
+                                                                            <td><input type="number" class="form-control text-center" id="bo_disc<%= x %>" name="bo_disc" value="<%= (data.bo_disc != null && !isNaN(data.bo_disc)) ? nFormat.format(data.bo_disc) : 0 %>" oninput="computeTotal('<%= x %>')"></td>
+                                                                            
+
+                                                                            <% } %>
+                                                                            
+                                                                            <!-- <td></td> -->
+                                                                            <input type="hidden" name="id_detl" value="<%= data._id %>">
+                                                                            <% //total += data.totalprice  %>
+                                                                            <% totalqty += parseInt(data.quantity)  %>
+                                                                            <% totalprices += parseInt(data.price)  %>
+                                                                            <% totaldiscprice += parseInt(data.discount)  %>
+
+                                                                            <% totaldiscewt += parseFloat(data.ewt)  %>
+                                                                            <% totaldiscspwp += parseFloat(data.spwp)  %>
+                                                                            <% totaldiscfin_disc += parseFloat(data.fin_disc)  %>
+                                                                            <% totaldiscvol_deals += parseFloat(data.vol_deals)  %>
+                                                                            <% totaldiscbo += parseFloat(data.bo_disc)  %>
+                                                                            <% //totalcollection = parseFloat(data.quantity)*(parseFloat(data.price)-parseFloat(data.discount)) %>
+                                                                            <% totalcollection = parseFloat(data.quantity) * (parseFloat(data.price) - (data.discount !== undefined ? parseFloat(data.discount) : 0)) %>
+
+                                                                            <% console.log(totalcollection) %>
+                                                                            <% totalcollection = parseFloat(totalcollection)-(parseFloat(data.ewt)+parseFloat(data.spwp)+parseFloat(data.fin_disc)+parseFloat(data.vol_deals)+parseFloat(data.bo_disc)) %>
+                                                                            <% total += totalcollection%>
+                                                                            <input type="hidden" name="totalNewPrice" id="totalNewPrice<%= x %>" value="<%= (totalcollection != null && !isNaN(totalcollection)) ? totalcollection : 0 %>">
+                                                                            <td id="totalidealorice<%= x %>"><%= nFormat.format(totalcollection) %></td>
+                                                                            
+                                                                        </tr>
+                                                                        <% x++ %>
+                                                                    <% }) %>
+
+                                                                    <tr class="text-center">
+                                                                        <td colspan="1"></td>
+                                                                        <td><b>TOTAL: </b></td>
+                                                                        <td><b><%= nFormat.format(totalqty) %></b></td>
+                                                                        <td></td>
+                                                                        <td><b><%= nFormat.format(totalprices) %></b></td>
+                                                                        <td><b><%= (totaldiscprice != null && !isNaN(totaldiscprice)) ? nFormat.format(totaldiscprice) : 0 %></b></td>
+                                                                        <td><b><%= (totaldiscewt != null && !isNaN(totaldiscewt)) ? nFormat.format(totaldiscewt) : 0 %></b></td>
+                                                                        <td><b><%= (totaldiscspwp != null && !isNaN(totaldiscspwp)) ? nFormat.format(totaldiscspwp) : 0 %></b></td>
+                                                                        <td><b><%= (totaldiscfin_disc != null && !isNaN(totaldiscfin_disc)) ? nFormat.format(totaldiscfin_disc) : 0 %></b></td>
+                                                                        <td><b><%= (totaldiscvol_deals != null && !isNaN(totaldiscvol_deals)) ? nFormat.format(totaldiscvol_deals) : 0 %></b></td>
+                                                                        <td><b><%= (totaldiscbo != null && !isNaN(totaldiscbo)) ? nFormat.format(totaldiscbo) : 0 %></b></td>
+                                                                        <td><b><%= nFormat.format(total) %></b></td>
+                                                                        <!-- <td></td> -->
+                                                                        <!-- <td><b><input type="number" class="form-control text-center"  style="width: 150px;" id="collection" name="collection" value="<%= sales_sa.collection_price %>"></b></td> -->
+                                                                    </tr>
+                                                                    
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <!-- <div class="row">
+
+                                                        <div class="col-md-4 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="note">Total Collection</label>
+                                                                <input type="number" class="form-control text-center"
+                                                                    placeholder="note" id="collection" name="collection" value="<%= sales_sa.collection_price %>">
+                                                            </div>
+                                                        </div>
+                                                    </div> -->
+                                                    
+                                                    <div class="row">
+                                                        <div class="col-md-8 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="note"><%= language.note %> </label>
+                                                                <input type="text" class="form-control"
+                                                                    placeholder="note" id="note" name="note" value="<%= sales_sa.note %>" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <% if (sales_sa.paid == "True") { %>
+                                                    <% } else { %>
+                                                        <button class="btn btn-primary" type="submit" id="submit"><%= language.submit %> </button>
+                                                    <% } %>
+
+                                                    
+                                                </form>
+                                                <div class="row">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                    <%- include('./partials/footer'); -%>
+    </div>
+                    <%- include('./partials/toastr'); -%>
+                    <%- include('./partials/script'); -%>
+       
+</body>
+
+<script>
+    function parseOrZero(value) {
+        return parseFloat(value) || 0;
+    }
+    function computeTotal(x){
+        var price = document.getElementById("price"+x);
+        var discount_price = document.getElementById("discount_price"+x);
+        var totalNewPrice = document.getElementById("totalNewPrice"+x);
+        var qty = document.getElementById("qty"+x);
+
+        //disc
+
+        var ewt = document.getElementById("ewt"+x);
+        var spwp = document.getElementById("spwp"+x);
+        var fin_disc = document.getElementById("fin_disc"+x);
+        var vol_deals = document.getElementById("vol_deals"+x);
+        var bo_disc = document.getElementById("bo_disc"+x);
+
+
+        var total = 0;
+        total = (qty.value)*(price.value-discount_price.value)
+        total = parseFloat(total) - (parseOrZero(ewt.value)+parseOrZero(spwp.value)+parseOrZero(fin_disc.value)+parseOrZero(vol_deals.value)+parseOrZero(bo_disc.value))
+
+        document.getElementById("totalidealorice"+x).innerHTML = total
+        console.log("total", total)
+        
+    }
+
+
+    function toggleChequeDate() {
+        var paymentType = document.getElementById('typeofpayment').value;
+        var chequeDateContainer = document.getElementById('chequeDateContainer');
+
+        if (paymentType === 'cheque') {
+            chequeDateContainer.style.display = 'block';
+        } else {
+            chequeDateContainer.style.display = 'none';
+        }
+    }
+
+    // Call the function on page load to set the initial state
+    window.onload = function() {
+        toggleChequeDate();
+    };
+</script>
+
+</html>
